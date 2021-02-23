@@ -2,7 +2,8 @@
 
 """
 
-#__all__ = ['CharacterUpgradeException']
+
+# __all__ = ['CharacterUpgradeException']
 
 
 class CharacterUpgradeException(Exception):
@@ -12,6 +13,24 @@ class CharacterUpgradeException(Exception):
 
 
 class CharacterDowngradeException(Exception):
+    """
+    """
+    pass
+
+
+class CharacterPointDistributionException(Exception):
+    """
+    """
+    pass
+
+
+class CharacterSkillDoesNotExistException(CharacterPointDistributionException):
+    """
+    """
+    pass
+
+
+class CharacterPointDistributionIsInactiveException(Exception):
     """
     """
     pass
@@ -29,13 +48,13 @@ class CharacterRankUpgradeException(CharacterUpgradeException):
     pass
 
 
-class CharacterRankDowngradeException(CharacterDowngradeException):
+class CharacterDemotionException(CharacterDowngradeException):
     """
     """
     pass
 
 
-class CharacterRankUpgradeBelowZeroException(CharacterRankDowngradeException):
+class CharacterDemotionBelowOneException(CharacterDemotionException):
     """
     """
     pass

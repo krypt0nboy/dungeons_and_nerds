@@ -56,6 +56,8 @@ class CharacterController(CharacterControllerBase):
         """
         if self._skill_point_distribution_is_active:
             self._tmp_skill_points = self._character.sp
+        else:
+            raise CharacterPointDistributionIsInactiveException("Skill distribution must be active")
 
     def init_tmp_skills(self):
         """
@@ -66,6 +68,8 @@ class CharacterController(CharacterControllerBase):
             for skill_name, skill in self._character.meta._skills.items():
                 if isinstance(skill, CharacterAttributeBaseSkill):
                     self._tmp_skills[skill_name] = self._character.get_skill_level(skill_name)
+        else:
+            raise CharacterPointDistributionIsInactiveException("Skill distribution must be active")
 
     def end_skill_point_distribution(self):
         """
@@ -89,16 +93,18 @@ class CharacterController(CharacterControllerBase):
         Validates a skill points distribution by updating the character's skill points and skills levels.
         :return:
         """
-        # TODO
-        # Create tmp_hp, tmp_ap, etc...
         if self._skill_point_distribution_is_active:
             for skill, level in self._tmp_skills.items():
                 self._character.set_skill_level(skill=skill, level=level)
-        self._tmp_skills = {}
+            self._tmp_skills = {}
+        else:
+            raise CharacterPointDistributionIsInactiveException("Skill distribution must be active")
 
     def get_tmp_skill_level(self, skill=None):
         if self._skill_point_distribution_is_active:
             return self._tmp_skills[skill]
+        else:
+            raise CharacterPointDistributionIsInactiveException("Skill distribution must be active")
 
     def upgrade_skill(self, skill=None):
         """
@@ -111,11 +117,12 @@ class CharacterController(CharacterControllerBase):
             cost = self.compute_upgrade_cost(skill=skill)
             if self._tmp_skill_points >= cost:
                 self._tmp_skills[skill] = self.get_tmp_skill_level(skill=skill) + 1
-                # setattr(self._character, skill, self.get_tmp_skill_level(skill=skill) + 1)
                 self._tmp_skill_points -= 1
                 return self._tmp_skills
             else:
                 raise CharacterUpgradeException("No skill points to spend")
+        else:
+            raise CharacterPointDistributionIsInactiveException("Skill distribution must be active")
 
     def compute_upgrade_cost(self, skill=None):
         """
@@ -125,10 +132,15 @@ class CharacterController(CharacterControllerBase):
         :rtype: int
         """
         if self._skill_point_distribution_is_active:
-            if self._character.meta._skills[skill]._uses_exponential_upgrade:
-                return ceil(self.get_tmp_skill_level(skill=skill) / 5)
+            if skill in self._character.meta._skills.keys():
+                if self._character.meta._skills[skill]._uses_exponential_upgrade:
+                    return ceil(self.get_tmp_skill_level(skill=skill) / 5)
+                else:
+                    return 1
             else:
-                return 1
+                raise CharacterSkillDoesNotExistException("No such skill as %s" % skill)
+        else:
+            raise CharacterPointDistributionIsInactiveException("Skill distribution must be active")
 
     def downgrade_skill(self, skill=None):
         """
@@ -148,6 +160,8 @@ class CharacterController(CharacterControllerBase):
                     return self._tmp_skill_points
             else:
                 raise CharacterUpgradeException("Skill cannot be downgraded further")
+        else:
+            raise CharacterPointDistributionIsInactiveException("Skill distribution must be active")
 
     def compute_downgrade_credit(self, skill=None):
         """
@@ -163,6 +177,8 @@ class CharacterController(CharacterControllerBase):
                     return ceil((current_skill_level - 1) / 5)
                 else:
                     return 1
+        else:
+            raise CharacterPointDistributionIsInactiveException("Skill distribution must be active")
 
     def promote(self):
         """
@@ -183,7 +199,7 @@ class CharacterController(CharacterControllerBase):
             self._character.rank -= 1
             return self._character.rank
         else:
-            raise CharacterRankUpgradeBelowZeroException("Character cannot be demoted further")
+            raise CharacterDemotionBelowOneException("Character cannot be demoted further")
 
     def lock(self, **kwargs):
         """
