@@ -41,13 +41,23 @@ class CharacterController(CharacterControllerBase):
         During the distribution and until validation, the skill points can be redeemed and reassigned.
         :return: None
         """
-        self._skill_point_distribution_is_active = True
-        self.init_tmp_skill_points()
-        self.init_tmp_skills()
+        if self.can_init_skill_point_distribution():
+            self._skill_point_distribution_is_active = True
+            self.init_tmp_skill_points()
+            self.init_tmp_skills()
+        else:
+            raise CharacterUpgradeException("Skill points are already being distributed")
 
     def can_init_skill_point_distribution(self):
-        # TODO
-        return True
+        """
+        Checks and indicates if the character controller can init a skill points distribution.
+        :return: A boolean indicating if it can init a spd.
+        :rtype: bool
+        """
+        if not self._skill_point_distribution_is_active:
+            return True
+        else:
+            return False
 
     def init_tmp_skill_points(self):
         """
@@ -76,8 +86,8 @@ class CharacterController(CharacterControllerBase):
         Ends a skill point distribution and makes the spended skill points un redeemable.
         :return:
         """
+        self.validate_skill_points_distribution()
         self.reset_tmp_skill_points()
-        self.validate_skills_points_distribution()
         self._skill_point_distribution_is_active = False
 
     def reset_tmp_skill_points(self):
@@ -88,17 +98,26 @@ class CharacterController(CharacterControllerBase):
         if self._skill_point_distribution_is_active:
             self._tmp_skill_points = 0
 
-    def validate_skills_points_distribution(self):
+    def validate_skill_points_distribution(self):
         """
         Validates a skill points distribution by updating the character's skill points and skills levels.
-        :return:
+        :return: None
         """
         if self._skill_point_distribution_is_active:
             for skill, level in self._tmp_skills.items():
                 self._character.set_skill_level(skill=skill, level=level)
+
+            self._character.sp = self._tmp_skill_points
             self._tmp_skills = {}
         else:
             raise CharacterPointDistributionIsInactiveException("Skill distribution must be active")
+
+    def update_based_skills(self):
+        """
+        Updates the based skills with the base skills as references.
+        :return: None
+        """
+        pass
 
     def get_tmp_skill_level(self, skill=None):
         if self._skill_point_distribution_is_active:
@@ -198,8 +217,8 @@ class CharacterController(CharacterControllerBase):
         if self._character.rank >= 1:
             self._character.rank -= 1
             return self._character.rank
-        else:
-            raise CharacterDemotionBelowOneException("Character cannot be demoted further")
+        #else:
+            #raise CharacterDemotionBelowOneException("Character cannot be demoted further")
 
     def lock(self, **kwargs):
         """
@@ -226,13 +245,29 @@ class CharacterController(CharacterControllerBase):
         self._character.hp = self._character.base_hp
         return self._character.hp
 
-
-class CharacterCombatController(CharacterControllerBase):
-    """
-    """
-
     def roll_attack_dice(self):
         return random.randint(0, self._character.ap)
 
     def roll_magik_dice(self):
         return random.randint(0, self._character.mp)
+
+    def post_fight(self, fight=None):
+        """
+        Run required routines after a fight.
+        :param fight: The fight for which to run the post routines.
+        :return: None
+        """
+        pass
+
+    def post_fight__as_winner(self, fight=None):
+        self.promote()
+
+    def post_fight__as_loser(self, fight=None):
+        self.demote()
+        self.lock()
+
+
+class CharacterCombatController(CharacterControllerBase):
+    """
+    """
+    pass

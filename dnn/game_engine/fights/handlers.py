@@ -12,3 +12,5 @@ class FightHandler(object):
         :param fight:
         """
         self.fight = fight
+
+

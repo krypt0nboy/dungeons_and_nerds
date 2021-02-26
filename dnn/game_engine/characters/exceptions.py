@@ -5,20 +5,25 @@
 
 # __all__ = ['CharacterUpgradeException']
 
-
-class CharacterUpgradeException(Exception):
+class CharacterException(Exception):
     """
     """
     pass
 
 
-class CharacterDowngradeException(Exception):
+class CharacterUpgradeException(CharacterException):
     """
     """
     pass
 
 
-class CharacterPointDistributionException(Exception):
+class CharacterDowngradeException(CharacterException):
+    """
+    """
+    pass
+
+
+class CharacterPointDistributionException(CharacterException):
     """
     """
     pass
@@ -30,7 +35,7 @@ class CharacterSkillDoesNotExistException(CharacterPointDistributionException):
     pass
 
 
-class CharacterPointDistributionIsInactiveException(Exception):
+class CharacterPointDistributionIsInactiveException(CharacterException):
     """
     """
     pass

@@ -8,9 +8,3 @@ class ErrorCollectorBase(object):
     """
     """
     pass
-
-
-class MasterErrorsCollector(object):
-    """
-    """
-    pass

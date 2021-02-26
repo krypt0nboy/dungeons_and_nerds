@@ -16,19 +16,27 @@ class CharacterTestCase(unittest.TestCase):
     def test_demotion(self):
         self.character.rank = 1
         self.character_controller.demote()
-        self.assertEqual(self.character.rank, 0)
+        self.assertEqual(self.character.rank, 1)
 
     def test_demotion_below_one(self):
-        with self.assertRaises(CharacterDemotionBelowOneException):
-            self.character_controller.demote()
-            self.assertEqual(self.character.rank, 0)
+        # with self.assertRaises(CharacterDemotionBelowOneException):
+        #     self.character_controller.demote()
+        #     self.assertEqual(self.character.rank, 0)
+        self.character.rank = 1
+        self.character_controller.demote()
+        self.assertEqual(self.character.rank, 1)
 
     def test_promotion(self):
         self.character_controller.promote()
         self.assertEqual(self.character.rank, 1)
 
     def test_sp_distribution(self):
-        pass
+        self.character_controller.init_skill_point_distribution()
+        self.character_controller.upgrade_skill(skill='base_hp')
+        self.character_controller.end_skill_point_distribution()
+        self.assertEqual(self.character.base_hp, 1)
+        self.assertEqual(self.character.hp, 1)
+        self.assertEqual(self.character.sp, 11)
 
     def test_sp_distribution_bypassing_init(self):
         with self.assertRaises(CharacterPointDistributionIsInactiveException):

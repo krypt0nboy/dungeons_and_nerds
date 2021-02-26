@@ -10,10 +10,10 @@ class PlayerBase(object):
     Base class for Player.
     """
 
-    def __init__(self, nickname=None):
+    def __init__(self, nickname=None, active_character=None, active_character_controller=None):
         self._nickname = nickname
-        self._active_character = None
-        self._active_character_controller = None
+        self._active_character = active_character
+        self._active_character_controller = active_character_controller
 
     @property
     def nickname(self):
