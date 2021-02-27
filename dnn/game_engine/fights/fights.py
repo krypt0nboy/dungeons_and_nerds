@@ -27,14 +27,66 @@ class FightBase(object):
         self._loser = None
         self._winner = None
 
+    @property
+    def player_1(self):
+        """
+        :rtype: dnn.game_engine.players.players.PlayerBase
+        """
+        return self._player_1
+
+    @property
+    def player_2(self):
+        """
+        :rtype: dnn.game_engine.players.players.PlayerBase
+        """
+        return self._player_2
+
+    @property
+    def start_datetime(self):
+        return self._start_datetime
+
+    @property
+    def end_datetime(self):
+        return self._end_datetime
+
+    @property
+    def current_active_player(self):
+        """
+        :rtype: dnn.game_engine.players.players.PlayerBase
+        """
+        return self._current_active_player
+
+    @property
+    def loser(self):
+        """
+        :rtype: dnn.game_engine.players.players.PlayerBase
+        """
+        return self._loser
+
+    @property
+    def winner(self):
+        """
+        :rtype: dnn.game_engine.players.players.PlayerBase
+        """
+        return self._winner
+
     def prepare_fight(self):
-        pass
+        """
+        :return:
+        """
+        event = FightIsGonnaStartEvent(fight=self)
+        zope.event.notify(event)
 
     def start_fight(self):
-        pass
+        """
+        :return:
+        """
+        event = FightHasStartedEvent(fight=self)
+        zope.event.notify(event)
 
     def end_fight(self):
-        self._winner = self._player_1
-        self._loser = self._player_2
+        """
+        :return:
+        """
         event = FightHasEndedEvent(fight=self)
         zope.event.notify(event)

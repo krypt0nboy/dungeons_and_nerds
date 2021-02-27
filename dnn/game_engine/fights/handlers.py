@@ -11,6 +11,6 @@ class FightHandler(object):
         """
         :param fight:
         """
-        self.fight = fight
+        self._fight = fight
 
 
