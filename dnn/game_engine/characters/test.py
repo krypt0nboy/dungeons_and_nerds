@@ -40,7 +40,7 @@ class CharacterTestCase(unittest.TestCase):
 
     def test_sp_distribution_bypassing_init(self):
         with self.assertRaises(CharacterPointDistributionIsInactiveException):
-            self.character_controller.upgrade_skill(skill='hp')
+            self.character_controller.upgrade_skill(skill='base_hp')
 
     def test_sp_distribution_skill_does_not_exist(self):
         with self.assertRaises(CharacterSkillDoesNotExistException):
