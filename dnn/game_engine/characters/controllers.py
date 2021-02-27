@@ -30,7 +30,6 @@ class CharacterController(CharacterControllerBase):
 
     def __init__(self, **kwargs):
         self._tmp_skill_points = None
-        # TODO : skill {name : { skill_level: 0, skill : skill_instance }}
         self._tmp_skills = {}
         self._skill_point_distribution_is_active = False
         super(CharacterController, self).__init__(**kwargs)
@@ -77,7 +76,8 @@ class CharacterController(CharacterControllerBase):
         if self._skill_point_distribution_is_active:
             for skill_name, skill in self._character.meta._skills.items():
                 if isinstance(skill, CharacterAttributeBaseSkill):
-                    self._tmp_skills[skill_name] = self._character.get_skill_level(skill_name)
+                    self._tmp_skills[skill_name] = {'level': self._character.get_skill_level(skill_name),
+                                                    'skill': skill}
         else:
             raise CharacterPointDistributionIsInactiveException("Skill distribution must be active")
 
@@ -104,9 +104,9 @@ class CharacterController(CharacterControllerBase):
         :return: None
         """
         if self._skill_point_distribution_is_active:
-            for skill, level in self._tmp_skills.items():
-                self._character.set_skill_level(skill=skill, level=level)
-
+            for skill_name, tmp_skill in self._tmp_skills.items():
+                self._character.set_skill_level(skill=skill_name, level=tmp_skill['level'])
+                self._character.set_skill_level(skill=skill_name.split('_')[1], level=tmp_skill['level'])
             self._character.sp = self._tmp_skill_points
             self._tmp_skills = {}
         else:
@@ -121,7 +121,7 @@ class CharacterController(CharacterControllerBase):
 
     def get_tmp_skill_level(self, skill=None):
         if self._skill_point_distribution_is_active:
-            return self._tmp_skills[skill]
+            return self._tmp_skills[skill]['level']
         else:
             raise CharacterPointDistributionIsInactiveException("Skill distribution must be active")
 
@@ -135,7 +135,7 @@ class CharacterController(CharacterControllerBase):
         if self._skill_point_distribution_is_active:
             cost = self.compute_upgrade_cost(skill=skill)
             if self._tmp_skill_points >= cost:
-                self._tmp_skills[skill] = self.get_tmp_skill_level(skill=skill) + 1
+                self._tmp_skills[skill]['level'] = self.get_tmp_skill_level(skill=skill) + 1
                 self._tmp_skill_points -= 1
                 return self._tmp_skills
             else:
@@ -151,8 +151,8 @@ class CharacterController(CharacterControllerBase):
         :rtype: int
         """
         if self._skill_point_distribution_is_active:
-            if skill in self._character.meta._skills.keys():
-                if self._character.meta._skills[skill]._uses_exponential_upgrade:
+            if skill in self._tmp_skills.keys():
+                if self._tmp_skills[skill]['skill']._uses_exponential_upgrade:
                     return ceil(self.get_tmp_skill_level(skill=skill) / 5)
                 else:
                     return 1
@@ -174,7 +174,6 @@ class CharacterController(CharacterControllerBase):
                 credit = self.compute_downgrade_credit(skill=skill)
                 if credit:
                     self._tmp_skills[skill] = current_tmp_skill_level - 1
-                    # setattr(self._character, skill, current_tmp_skill_level - 1)
                     self._tmp_skill_points += 1
                     return self._tmp_skill_points
             else:
@@ -192,7 +191,7 @@ class CharacterController(CharacterControllerBase):
         if self._skill_point_distribution_is_active:
             current_skill_level = self._character.get_skill_level(skill=skill)
             if current_skill_level >= 1:
-                if self._character.meta._skills[skill]._uses_exponential_upgrade:
+                if self._tmp_skills[skill]['skill']._uses_exponential_upgrade:
                     return ceil((current_skill_level - 1) / 5)
                 else:
                     return 1
@@ -214,11 +213,11 @@ class CharacterController(CharacterControllerBase):
         :return: The updated characters's rank.
         :rtype: int
         """
-        if self._character.rank >= 1:
+        if self._character.rank > 1:
             self._character.rank -= 1
             return self._character.rank
-        #else:
-            #raise CharacterDemotionBelowOneException("Character cannot be demoted further")
+        # else:
+        # raise CharacterDemotionBelowOneException("Character cannot be demoted further")
 
     def lock(self, **kwargs):
         """
@@ -261,6 +260,7 @@ class CharacterController(CharacterControllerBase):
 
     def post_fight__as_winner(self, fight=None):
         self.promote()
+        self.replenish_health()
 
     def post_fight__as_loser(self, fight=None):
         self.demote()
