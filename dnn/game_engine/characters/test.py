@@ -19,9 +19,6 @@ class CharacterTestCase(unittest.TestCase):
         self.assertEqual(self.character.rank, 1)
 
     def test_demotion_below_one(self):
-        # with self.assertRaises(CharacterDemotionBelowOneException):
-        #     self.character_controller.demote()
-        #     self.assertEqual(self.character.rank, 0)
         self.character.rank = 1
         self.character_controller.demote()
         self.assertEqual(self.character.rank, 1)

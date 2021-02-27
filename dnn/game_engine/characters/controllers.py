@@ -259,10 +259,20 @@ class CharacterController(CharacterControllerBase):
         pass
 
     def post_fight__as_winner(self, fight=None):
+        """
+        Runs post fight routines after winning a fight.
+        :param fight:
+        :return:
+        """
         self.promote()
         self.replenish_health()
 
     def post_fight__as_loser(self, fight=None):
+        """
+        Runs post fight routines after losing a fight.
+        :param fight:
+        :return:
+        """
         self.demote()
         self.lock()
 

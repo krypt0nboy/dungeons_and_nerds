@@ -58,13 +58,15 @@ class CharacterAttributeSkill(CharacterAttribute):
 
 class CharacterAttributeBaseSkill(CharacterAttributeSkill):
     """
+    CharacterAttributeBaseSkill class.
+    A CharacterAttributeBaseSkill is a skill on which the actual skill is based.
     """
 
     def __init__(self, uses_exponential_upgrade: bool = False, based_skill=None,
                  **kwargs):
         """
-        :param base_skill:
-        :param uses_exponential_upgrade:
+        :param based_skill:
+        :param uses_exponential_upgrade: Whether exponential upgrade is required or not.
         :param kwargs:
         """
         super(CharacterAttributeBaseSkill, self).__init__(**kwargs)
@@ -74,13 +76,15 @@ class CharacterAttributeBaseSkill(CharacterAttributeSkill):
 
 class CharacterAttributeBasedSkill(CharacterAttributeSkill):
     """
+    CharacterAttributeBasedSkill class.
+    A CharacterAttributeBasedSkill is the actual skill used in combat.
     """
 
     def __init__(self, base_skill: CharacterAttributeBaseSkill = None,
                  **kwargs):
         """
-        :param base_skill:
-        :param uses_exponential_upgrade:
+        :param base_skill: The base skill upon which it's based.
+        :param uses_exponential_upgrade: Whether exponential upgrade is required or not.
         :param kwargs:
         """
         super(CharacterAttributeBasedSkill, self).__init__(**kwargs)

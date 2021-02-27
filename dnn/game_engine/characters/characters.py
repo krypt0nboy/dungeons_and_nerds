@@ -87,7 +87,3 @@ class CharacterBase(object, metaclass=CharacterMeta):
     @classmethod
     def controller_class(cls):
         return CharacterControllerBase
-
-    @classmethod
-    def factory_class(cls):
-        return ""
