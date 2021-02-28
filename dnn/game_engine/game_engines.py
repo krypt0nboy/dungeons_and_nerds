@@ -25,7 +25,7 @@ class ServerSideGameEngine(GameEngineBase):
 
     def __init__(self, **kwargs):
         super(ServerSideGameEngine, self).__init__(**kwargs)
-        self._connected_clients = None
+        self._connected_clients = []
 
     def run(self):
         pass
