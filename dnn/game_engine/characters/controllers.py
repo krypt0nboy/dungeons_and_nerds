@@ -3,11 +3,14 @@
 """
 import logging
 import random
-
 from math import ceil
+
+import zope.event
 
 from dnn.game_engine.characters.exceptions import *
 from dnn.game_engine.characters.attributes import CharacterAttributeBaseSkill
+from dnn.game_engine.characters.events import CharacterHasBeenLockedEvent
+from dnn.game_engine.characters.utils import lock_character
 
 logger = logging.getLogger(__name__)
 
@@ -225,7 +228,10 @@ class CharacterController(CharacterControllerBase):
         :param kwargs:
         :return:
         """
-        pass
+        character_lock = lock_character(character=self)
+        if character_lock:
+            event = CharacterHasBeenLockedEvent(character=self, lock=character_lock)
+            zope.event.notify(event)
 
     def unlock(self, **kwargs):
         """
