@@ -2,8 +2,11 @@
 
 """
 
+__all__ = ['CharacterException', 'CharacterUpgradeException', 'CharacterDowngradeException',
+           'CharacterPointDistributionException', 'CharacterSkillDoesNotExistException',
+           'CharacterPointDistributionIsInactiveException', 'CharacterSkillUpgradeException',
+           'CharacterRankUpgradeException', 'CharacterDemotionException', 'CharacterDemotionBelowOneException']
 
-# __all__ = ['CharacterUpgradeException']
 
 class CharacterException(Exception):
     """
