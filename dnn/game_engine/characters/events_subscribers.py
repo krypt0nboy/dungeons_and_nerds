@@ -19,9 +19,9 @@ def fight_has_ended(event):
     :return: None
     """
     winner = event.fight.winner
-    winner_cc = winner._active_character_controller
+    winner_cc = winner.active_character_controller
     winner_cc.post_fight__as_winner(fight=event.fight)
 
-    loser = event.fight._loser
-    loser_cc = loser._active_character_controller
+    loser = event.fight.loser
+    loser_cc = loser.active_character_controller
     loser_cc.post_fight__as_loser(fight=event.fight)
