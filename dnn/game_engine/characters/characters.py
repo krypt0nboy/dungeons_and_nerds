@@ -40,8 +40,6 @@ class CharacterMeta(type):
                     new_attributes['meta']._attributes[attr_name] = attr_value
                     new_attributes[attr_name] = None
                 # TODO handle CharacterAttributeBasedSkill separately to allow skill generic processing in controller
-                elif type(attr_value, CharacterControllerBase):
-                    new_attributes[attr_name] = attr_value()
                 else:
                     new_attributes[attr_name] = attr_value
             else:

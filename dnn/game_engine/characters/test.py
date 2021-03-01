@@ -10,14 +10,14 @@ class CharacterTestCase(unittest.TestCase):
     """
 
     def setUp(self):
-        self.character = CharacterBase(base_hp=0, base_dp=0, base_ap=0, base_mp=0, sp=12, rank=0)
+        self.character = CharacterBase()
         self.character_controller = CharacterController(character=self.character)
 
     def test_default_attributes(self):
         self.assertEqual(self.character.rank, 1)
         self.assertEqual(self.character.sp, 12)
-        self.assertEqual(self.character.hp, 12)
-        self.assertEqual(self.character.base_hp, 12)
+        self.assertEqual(self.character.hp, 10)
+        self.assertEqual(self.character.base_hp, 10)
 
     def test_demotion(self):
         self.character.rank = 1
@@ -31,14 +31,14 @@ class CharacterTestCase(unittest.TestCase):
 
     def test_promotion(self):
         self.character_controller.promote()
-        self.assertEqual(self.character.rank, 1)
+        self.assertEqual(self.character.rank, 2)
 
     def test_sp_distribution(self):
         self.character_controller.init_skill_point_distribution()
         self.character_controller.upgrade_skill(skill='base_hp')
         self.character_controller.end_skill_point_distribution()
-        self.assertEqual(self.character.base_hp, 1)
-        self.assertEqual(self.character.hp, 1)
+        self.assertEqual(self.character.base_hp, 11)
+        self.assertEqual(self.character.hp, 11)
         self.assertEqual(self.character.sp, 11)
 
     def test_sp_distribution_bypassing_init(self):
