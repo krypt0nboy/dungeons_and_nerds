@@ -3,14 +3,12 @@
 """
 
 
-class FightHandler(object):
+class ActionHandler(object):
     """
     """
 
-    def __init__(self, fight=None):
+    def __init__(self, **kwargs):
         """
-        :param fight:
+        :param action:
         """
-        self._fight = fight
-
-
+        pass

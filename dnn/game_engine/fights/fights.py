@@ -12,20 +12,26 @@ class FightBase(object):
     """
     """
 
-    def __init__(self, player_1=None, player_2=None, start_datetime=None):
+    def __init__(self, player_1=None, player_2=None, start_datetime=None, end_datetime=None, loser=None, winner=None,
+                 turns=None):
         """
         :param player_1: Always the player that started the fight.
         The player that first entered the lobby is the player who started the fight.
-        :param player_2:
-        :param start_datetime:
+        :param player_2: The player 2.
+        :param start_datetime: The date and time the fight started.
+        :param end_datetime: The date and time the fight ended.
+        :param loser: The loser of the fight.
+        :param winner: The winner of the fight.
+        :param turns: The fight turns.
         """
         self._player_1 = player_1
         self._player_2 = player_2
         self._start_datetime = start_datetime or datetime.now()
-        self._end_datetime = None
+        self._end_datetime = end_datetime
         self._current_active_player = player_1
-        self._loser = None
-        self._winner = None
+        self._loser = loser
+        self._winner = winner
+        self._turns = turns or []
 
     @property
     def player_1(self):
@@ -90,3 +96,12 @@ class FightBase(object):
         """
         event = FightHasEndedEvent(fight=self)
         zope.event.notify(event)
+
+    def new_turn(self):
+        pass
+
+    def start_turn(self):
+        pass
+
+    def end_turn(self):
+        pass
