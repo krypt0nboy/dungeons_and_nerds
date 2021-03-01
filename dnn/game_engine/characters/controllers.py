@@ -9,7 +9,7 @@ import zope.event
 
 from dnn.game_engine.characters.exceptions import *
 from dnn.game_engine.characters.attributes import CharacterAttributeBaseSkill
-from dnn.game_engine.characters.events import CharacterHasBeenLockedEvent
+from dnn.game_engine.characters.events import CharacterHasBeenLockedEvent, CharacterHealthIsZeroOrLess
 from dnn.game_engine.characters.utils import lock_character
 
 logger = logging.getLogger(__name__)
@@ -241,6 +241,28 @@ class CharacterController(CharacterControllerBase):
         """
         pass
 
+    def increase_health(self, amount=None):
+        """
+        Increases the character's health by the provided amount.
+        :param amount: The amount of health to add.
+        :return: The character's updated health points.
+        :rtype: int
+        """
+        self._character.hp += amount
+        return self._character.hp
+
+    def decrease_health(self, amount=None):
+        """
+        Decreases the character's health by the provided amount.
+        :param amount: The amount of health to remove.
+        :return: The character's updated health points.
+        :rtype: int
+        """
+        self._character.hp -= amount
+        if self._character.hp <= 0:
+            zope.event.notify(CharacterHealthIsZeroOrLess)
+        return self._character.hp
+
     def replenish_health(self):
         """
         Replenishes the character's health.
@@ -286,4 +308,6 @@ class CharacterController(CharacterControllerBase):
 class CharacterCombatController(CharacterControllerBase):
     """
     """
-    pass
+
+    def __init__(self, fight=None, **kwargs):
+        super(CharacterCombatController, self).__init__(**kwargs)

@@ -13,6 +13,12 @@ class CharacterTestCase(unittest.TestCase):
         self.character = CharacterBase(base_hp=0, base_dp=0, base_ap=0, base_mp=0, sp=12, rank=0)
         self.character_controller = CharacterController(character=self.character)
 
+    def test_default_attributes(self):
+        self.assertEqual(self.character.rank, 1)
+        self.assertEqual(self.character.sp, 12)
+        self.assertEqual(self.character.hp, 12)
+        self.assertEqual(self.character.base_hp, 12)
+
     def test_demotion(self):
         self.character.rank = 1
         self.character_controller.demote()

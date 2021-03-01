@@ -40,6 +40,8 @@ class CharacterMeta(type):
                     new_attributes['meta']._attributes[attr_name] = attr_value
                     new_attributes[attr_name] = None
                 # TODO handle CharacterAttributeBasedSkill separately to allow skill generic processing in controller
+                elif type(attr_value, CharacterControllerBase):
+                    new_attributes[attr_name] = attr_value()
                 else:
                     new_attributes[attr_name] = attr_value
             else:
@@ -55,16 +57,16 @@ class CharacterBase(object, metaclass=CharacterMeta):
 
     name = CharacterAttribute(name='name', label='Name')
     owner = CharacterAttribute(name='owner', label='Owner')
-    base_hp = CharacterAttributeBaseSkill(name='base_health_points', label='Base health points')
+    base_hp = CharacterAttributeBaseSkill(name='base_health_points', label='Base health points', default=10)
     base_ap = CharacterAttributeBaseSkill(name='base_attack_points', label='Base attack points')
     base_mp = CharacterAttributeBaseSkill(name='base_magik_points', label='Base magik points')
     base_dp = CharacterAttributeBaseSkill(name='base_defense_points', label='Base defense points')
-    hp = CharacterAttributeBasedSkill(name='health_points', label='Health points', base_skill=base_hp)
+    hp = CharacterAttributeBasedSkill(name='health_points', label='Health points', base_skill=base_hp, default=10)
     ap = CharacterAttributeBasedSkill(name='attack_points', label='Attack points', base_skill=base_ap)
     mp = CharacterAttributeBasedSkill(name='magik_points', label='Magik points', base_skill=base_mp)
     dp = CharacterAttributeBasedSkill(name='defense_points', label='Defense points', base_skill=base_dp)
-    sp = CharacterAttributeLiveStat(name='skill_points', label='Skill points')
-    rank = CharacterAttributeLiveStat(name='rank', label='Rank')
+    sp = CharacterAttributeLiveStat(name='skill_points', label='Skill points', default=12)
+    rank = CharacterAttributeLiveStat(name='rank', label='Rank', default=1)
     is_locked = CharacterAttributeLiveStat(name='is_locked', label='Is locked')
     lock = CharacterAttributeLiveStat(name='lock', label='Lock')
     last_fight = CharacterAttributeLogStat(name='last_fight', label='Last fight')
@@ -77,6 +79,8 @@ class CharacterBase(object, metaclass=CharacterMeta):
         for attr_name, attr in self.meta._attributes.items():
             if attr_name in kwargs.keys():
                 setattr(self, attr_name, kwargs.pop(attr_name))
+            elif attr.default is not None:
+                setattr(self, attr_name, attr.default)
 
     def get_skill_level(self, skill: str = None):
         return getattr(self, skill)
@@ -85,5 +89,5 @@ class CharacterBase(object, metaclass=CharacterMeta):
         return setattr(self, skill, level)
 
     @classmethod
-    def controller_class(cls):
+    def controller_base_class(cls):
         return CharacterControllerBase

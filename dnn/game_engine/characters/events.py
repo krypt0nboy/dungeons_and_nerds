@@ -57,3 +57,9 @@ class CharacterHasBeenLockedEvent(CharacterEvent):
     @property
     def lock(self):
         return self._lock
+
+
+class CharacterHealthIsZeroOrLess(CharacterEvent):
+    """
+    """
+    pass
