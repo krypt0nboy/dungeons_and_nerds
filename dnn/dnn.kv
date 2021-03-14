@@ -1,0 +1,184 @@
+#:kivy 1.10.0
+#:import translate_color kivy_boost.utils.colors.translate_color
+
+<DnnScreenManager>:
+    HCStudiosScreen:
+        id: hc_studio_screen
+    TheTribeIOScreen:
+        id: the_tribe_io_screen
+    DNNIntroScreen:
+        id: dnn_intro_screen
+    DNNMenuScreen:
+        id: dnn_menu_screen
+
+<HCStudiosScreen>:
+    name: '_hc_studio_screen_'
+    id: hc_studio_screen
+    size: root.width, root.height
+    pos: 0, root.height - self.height
+    canvas.before:
+        Color:
+            rgb: translate_color('black*')
+        Rectangle:
+            pos: self.pos
+            size: self.size
+    FloatLayout:
+        size_hint: 1, 1
+        pos: 0, hc_studio_screen.height - self.height
+        canvas.before:
+            Color:
+                rgb: translate_color('black*')
+            Rectangle:
+                pos: self.pos
+                size: self.size
+        Label:
+            id: label
+            text: 'HC Studios present'
+            font_size: 100
+            size_hint: 1, 1
+            pos: root.width / 2 - self.width / 2, hc_studio_screen.height - self.height
+            font_name: './resources/fonts/Alkhemikal.ttf'
+<TheTribeIOScreen>:
+    name: '_the_tribe_io_screen_'
+    id: the_tribe_io_screen
+    size: root.width, root.height
+    pos: 0, root.height - self.height
+    canvas.before:
+        Color:
+            rgb: translate_color('black*')
+        Rectangle:
+            pos: self.pos
+            size: self.size
+    FloatLayout:
+        size_hint: 1, 1
+        pos: 0, the_tribe_io_screen.height - self.height
+        canvas.before:
+            Color:
+                rgb: translate_color('black*')
+            Rectangle:
+                pos: self.pos
+                size: self.size
+        Label:
+            id: label
+            text: 'A game developed for'
+            font_size: 100
+            size_hint: 1, 1
+            pos: root.width / 2 - self.width / 2, the_tribe_io_screen.height - self.height + 250
+            font_name: './resources/fonts/Alkhemikal.ttf'
+        Image:
+            source: './resources/imgs/logo-the-tribe-white.png'
+            pos: root.width / 2 - self.width / 2, - 100
+<DNNIntroScreen>:
+    name: '_dnn_intro_screen_'
+    id: dnn_intro_screen
+    size: root.width, root.height
+    pos: 0, root.height - self.height
+    canvas.before:
+        Color:
+            rgb: translate_color('black*')
+        Rectangle:
+            pos: self.pos
+            size: self.size
+    FloatLayout:
+        size_hint: 1, 1
+        pos: 0, dnn_intro_screen.height - self.height
+        canvas.before:
+            Color:
+                rgb: translate_color('black*')
+            Rectangle:
+                pos: self.pos
+                size: self.size
+        Label:
+            id: label
+            text: 'Dungeons And Nerds'
+            font_size: 200
+            size_hint: 1, 1
+            pos: root.width / 2 - self.width / 2, dnn_intro_screen.height - self.height
+            font_name: './resources/fonts/alagard.ttf'
+<DNNMenuScreen>:
+    name: '_dnn_menu_screen_'
+    id: dnn_menu_screen
+    size: root.width, root.height
+    pos: 0, root.height - self.height
+    AnchorLayout:
+        size_hint: 1, 0.4
+        id: title_anchor
+        anchor_x: "center"
+        anchor_y: "top"
+        pos: 0, root.height - self.height
+        canvas.before:
+            Color:
+                rgb: translate_color('gray 62')
+            Rectangle:
+                pos: 0, root.height - 400
+                size: root.width, 80
+        Label:
+            text: 'Dungeons and Nerds'
+            size_hint: None, None
+            size: root.width / 2, title_anchor.height / 2
+            font_size: 200
+            font_name: './resources/fonts/alagard.ttf'
+    FloatLayout:
+        size: root.width, root.height - 400
+        pos: 0, root.height - self.height - 400
+        canvas.before:
+            Color:
+                rgb: translate_color('black*')
+            Rectangle:
+                pos: self.pos
+                size: self.size
+        InteractiveButton:
+            size_hint: 0.1, 0.1
+            text: 'Log in'
+            base_text: 'Log in'
+            press_sound: 'mixkit_metal_hit_woosh_1485'
+            font_size: 90
+            background_color: 1, 1, 1, 0
+            base_text_color: translate_color('white*')
+            hover_text_color: translate_color('indian red')
+            pos: root.width / 2 - self.width / 2, root.height - self.height - 450
+            font_name: './resources/fonts/alagard.ttf'
+        InteractiveButton:
+            size_hint: 0.1, 0.1
+            text: 'Lobby'
+            base_text: 'Lobby'
+            press_sound: 'mixkit_metal_hit_woosh_1485'
+            font_size: 90
+            background_color: 1, 1, 1, 0
+            base_text_color: translate_color('white*')
+            hover_text_color: translate_color('indian red')
+            pos: root.width / 2 - self.width / 2, root.height - self.height - 650
+            font_name: './resources/fonts/alagard.ttf'
+        InteractiveButton:
+            size_hint: 0.1, 0.1
+            text: 'Stats'
+            base_text: 'Stats'
+            press_sound: 'mixkit_metal_hit_woosh_1485'
+            font_size: 90
+            background_color: 1, 1, 1, 0
+            base_text_color: translate_color('white*')
+            hover_text_color: translate_color('indian red')
+            pos: root.width / 2 - self.width / 2, root.height - self.height - 850
+            font_name: './resources/fonts/alagard.ttf'
+        InteractiveButton:
+            size_hint: 0.1, 0.1
+            text: 'Credits'
+            base_text: 'Credits'
+            press_sound: 'mixkit_metal_hit_woosh_1485'
+            font_size: 90
+            background_color: 1, 1, 1, 0
+            base_text_color: translate_color('white*')
+            hover_text_color: translate_color('indian red')
+            pos: root.width / 2 - self.width / 2, root.height - self.height - 1050
+            font_name: './resources/fonts/alagard.ttf'
+        InteractiveButton:
+            size_hint: 0.1, 0.1
+            text: 'Settings'
+            base_text: 'Settings'
+            press_sound: 'mixkit_metal_hit_woosh_1485'
+            font_size: 90
+            background_color: 1, 1, 1, 0
+            base_text_color: translate_color('white*')
+            hover_text_color: translate_color('indian red')
+            pos: root.width / 2 - self.width / 2, root.height - self.height - 1250
+            font_name: './resources/fonts/alagard.ttf'
