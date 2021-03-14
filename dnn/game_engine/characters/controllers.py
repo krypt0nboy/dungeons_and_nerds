@@ -303,11 +303,3 @@ class CharacterController(CharacterControllerBase):
         """
         self.demote()
         self.lock()
-
-
-class CharacterCombatController(CharacterControllerBase):
-    """
-    """
-
-    def __init__(self, fight=None, **kwargs):
-        super(CharacterCombatController, self).__init__(**kwargs)

@@ -37,10 +37,11 @@ class CharacterLockBase(object):
     Base class for Character locks.
     """
 
-    def __init__(self, character=None, lock_reason=None):
+    def __init__(self, character=None, lock_reason=None, start_datetime=None):
         """
         :param character:
         :param lock_reason:
         """
         self.character = character
         self.lock_reason = lock_reason
+        self.start_datetime = start_datetime

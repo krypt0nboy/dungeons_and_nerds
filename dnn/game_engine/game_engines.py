@@ -9,14 +9,19 @@ class GameEngineBase(object):
     """
     """
 
-    def __init__(self, version=None, locks_registry=None, ):
-        self._version = version
-        self._errors_collector = None
+    def __init__(self, locks_registry=None):
         self._character_locks_registry = locks_registry or CharacterLocksRegistry()
-        self._db_engine = None
 
     def run(self):
         raise NotImplementedError
+
+
+class ServerLessGameEngine(GameEngineBase):
+    """
+    """
+
+    def run(self):
+        pass
 
 
 class ServerSideGameEngine(GameEngineBase):

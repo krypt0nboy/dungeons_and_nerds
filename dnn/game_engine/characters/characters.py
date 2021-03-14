@@ -54,7 +54,7 @@ class CharacterBase(object, metaclass=CharacterMeta):
     """
 
     name = CharacterAttribute(name='name', label='Name')
-    owner = CharacterAttribute(name='owner', label='Owner')
+    player = CharacterAttribute(name='player', label='Player', help_text='The player that owns the character')
     base_hp = CharacterAttributeBaseSkill(name='base_health_points', label='Base health points', default=10)
     base_ap = CharacterAttributeBaseSkill(name='base_attack_points', label='Base attack points')
     base_mp = CharacterAttributeBaseSkill(name='base_magik_points', label='Base magik points')

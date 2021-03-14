@@ -3,9 +3,10 @@
 """
 
 
-def character_health_is_below_one(character=None):
+def character_health_is_zero_or_less(character=None):
     """
     :param character:
     :return:
     """
-    pass
+    fight = character.player.current_fight
+    fight.set_loser(character.player)

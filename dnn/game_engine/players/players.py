@@ -35,6 +35,3 @@ class PlayerBase(object):
     @property
     def active_character_controller(self):
         return self._active_character_controller
-
-    def select_character(self, character=None):
-        pass
