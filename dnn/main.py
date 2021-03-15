@@ -2,16 +2,13 @@
 """
 App's main file.
 """
-from kivy.app import App
-from kivy.clock import Clock
-from kivy.uix.screenmanager import ScreenManager, Screen, FadeTransition
-import os
-
 import kivy
 from kivy.app import App
+from kivy.properties import StringProperty
 from kivy.config import Config
-from kivy.uix.screenmanager import Screen
+from kivy.uix.screenmanager import ScreenManager, Screen, FadeTransition
 from kivy.uix.widget import Widget
+from kivy.clock import Clock
 
 from kivy_boost.uix.table import *
 from kivy_boost.uix.button import *
@@ -20,17 +17,19 @@ from kivy_boost.uix.layouts import *
 from kivy_boost.uix.label import *
 from kivy_boost.common import *
 from kivy_boost.app import BoostedApp
-from kivy_boost.audio.audio_registry import *
 from kivy_boost.audio.utils import *
+from kivy_boost.uix.popup import WarningPopup
+from kivy_boost.uix.screens import *
 
-from settings.base import RESOURCES_PATH
-from kivy.clock import Clock
+from registry__audio import *
+from registry__fonts import *
+from registry__graphics import *
 
-kivy.require("1.10.0")
-Config.set('graphics', 'width', '1400')
-Config.set('graphics', 'height', '900')
-Config.set('graphics', 'resizable', 1)
-Config.write()
+kivy.require("2.0.0")
+# Config.set('graphics', 'width', '1400')
+# Config.set('graphics', 'height', '900')
+# Config.set('graphics', 'resizable', 1)
+# Config.write()
 
 INTRO = """
 You and your two friends Charles and Aurel were playing Dungeons and Dragons,
@@ -59,8 +58,16 @@ class TheTribeIOScreen(Screen):
     pass
 
 
-class DNNIntroScreen(Screen):
+class DNNLogoScreen(Screen):
     pass
+
+
+class DNNIntroScreen(Screen):
+    intro = StringProperty()
+
+    def __init__(self, **kwargs):
+        super(DNNIntroScreen, self).__init__(**kwargs)
+        self.intro = INTRO
 
 
 class DNNMenuScreen(Screen):
@@ -71,21 +78,29 @@ class DnnScreenManager(ScreenManager):
 
     def __init__(self, **kwargs):
         super(DnnScreenManager, self).__init__(transition=FadeTransition(), **kwargs)
-        Clock.schedule_once(self.screen_switch_hc_studio, 3)
+        Clock.schedule_once(self.screen_switch_dnn_menu_screen_, 3)
 
-    def screen_switch_hc_studio(self, dt):
+    def screen_switch_hc_studio_screen_(self, dt):
         self.current = '_hc_studio_screen_'
-        Clock.schedule_once(self.screen_switch_the_tribe_io, 4)
+        Clock.schedule_once(self.screen_switch_the_tribe_io_screen_, 4)
 
-    def screen_switch_the_tribe_io(self, dt):
+    def screen_switch_the_tribe_io_screen_(self, dt):
         self.current = '_the_tribe_io_screen_'
-        Clock.schedule_once(self.screen_switch_dnn_intro, 4)
+        Clock.schedule_once(self.screen_switch_dnn_logo_screen_, 4)
 
-    def screen_switch_dnn_intro(self, dt):
+    def screen_switch_dnn_logo_screen_(self, dt):
+        self.current = '_dnn_logo_screen_'
+        Clock.schedule_once(self.screen_switch_dnn_menu_screen_, 4)
+
+    def screen_switch_dnn_intro_screen_(self, dt):
         self.current = '_dnn_intro_screen_'
-        Clock.schedule_once(self.screen_switch_dnn_menu, 3)
+        sound = load_sound_by_name(name='intro')
+        if sound:
+            sound.play()
+            sound.volume = 1
+        Clock.schedule_once(self.screen_switch_dnn_menu_screen_, 46)
 
-    def screen_switch_dnn_menu(self, dt):
+    def screen_switch_dnn_menu_screen_(self, dt):
         self.current = '_dnn_menu_screen_'
 
 
@@ -95,10 +110,11 @@ class DNNApp(App):
         return DnnScreenManager()
 
     def run(self, **kwargs):
-        sound = load_sound_by_name(resources_path=RESOURCES_PATH, name='jim_hall_hope_not_lost')
+        sound = load_sound_by_name(name='jim_hall_hope_not_lost')
         if sound:
             sound.play()
-            sound.volume = 0.1
+            sound.volume = 0.05
+            sound.loop = True
 
         super(DNNApp, self).run()
 

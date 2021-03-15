@@ -1,11 +1,17 @@
 #:kivy 1.10.0
+#:import Factory kivy.factory.Factory
 #:import translate_color kivy_boost.utils.colors.translate_color
+#:import get_font_resource_full_path kivy_boost.common.get_font_resource_full_path
+#:import get_graphic_resource_full_path kivy_boost.common.get_graphic_resource_full_path
 
 <DnnScreenManager>:
+    id: dnn_screen_manager
     HCStudiosScreen:
         id: hc_studio_screen
     TheTribeIOScreen:
         id: the_tribe_io_screen
+    DNNLogoScreen:
+        id: dnn_logo_screen
     DNNIntroScreen:
         id: dnn_intro_screen
     DNNMenuScreen:
@@ -66,8 +72,37 @@
             pos: root.width / 2 - self.width / 2, the_tribe_io_screen.height - self.height + 250
             font_name: './resources/fonts/Alkhemikal.ttf'
         Image:
-            source: './resources/imgs/logo-the-tribe-white.png'
+            #source: './resources/imgs/logo-the-tribe-white.png'
+            source: get_graphic_resource_full_path(name='logo-the-tribe-white')
             pos: root.width / 2 - self.width / 2, - 100
+<DNNLogoScreen>:
+    name: '_dnn_logo_screen_'
+    id: dnn_logo_screen
+    size: root.width, root.height
+    pos: 0, root.height - self.height
+    canvas.before:
+        Color:
+            rgb: translate_color('black*')
+        Rectangle:
+            pos: self.pos
+            size: self.size
+    FloatLayout:
+        size_hint: 1, 1
+        pos: 0, dnn_logo_screen.height - self.height
+        canvas.before:
+            Color:
+                rgb: translate_color('black*')
+            Rectangle:
+                pos: self.pos
+                size: self.size
+        Label:
+            id: label
+            text: 'Dungeons And Nerds'
+            font_size: 200
+            size_hint: 1, 1
+            pos: root.width / 2 - self.width / 2, dnn_logo_screen.height - self.height
+            #font_name: './resources/fonts/alagard.ttf'
+            font_name: get_font_resource_full_path(name='alagard')
 <DNNIntroScreen>:
     name: '_dnn_intro_screen_'
     id: dnn_intro_screen
@@ -90,16 +125,17 @@
                 size: self.size
         Label:
             id: label
-            text: 'Dungeons And Nerds'
-            font_size: 200
+            text: dnn_intro_screen.intro
+            font_size: 70
             size_hint: 1, 1
             pos: root.width / 2 - self.width / 2, dnn_intro_screen.height - self.height
-            font_name: './resources/fonts/alagard.ttf'
+            font_name: get_font_resource_full_path(name='alagard')
 <DNNMenuScreen>:
     name: '_dnn_menu_screen_'
     id: dnn_menu_screen
     size: root.width, root.height
     pos: 0, root.height - self.height
+    #buttons: [log_in_button]
     AnchorLayout:
         size_hint: 1, 0.4
         id: title_anchor
@@ -127,18 +163,21 @@
             Rectangle:
                 pos: self.pos
                 size: self.size
-        InteractiveButton:
+        BoostedMenuButton:
+            id: log_in_button
             size_hint: 0.1, 0.1
             text: 'Log in'
             base_text: 'Log in'
             press_sound: 'mixkit_metal_hit_woosh_1485'
             font_size: 90
             background_color: 1, 1, 1, 0
+            target_screen: '_hc_studio_screen_'
             base_text_color: translate_color('white*')
             hover_text_color: translate_color('indian red')
             pos: root.width / 2 - self.width / 2, root.height - self.height - 450
             font_name: './resources/fonts/alagard.ttf'
-        InteractiveButton:
+        BoostedMenuButton:
+            id: lobby_button
             size_hint: 0.1, 0.1
             text: 'Lobby'
             base_text: 'Lobby'
@@ -149,7 +188,9 @@
             hover_text_color: translate_color('indian red')
             pos: root.width / 2 - self.width / 2, root.height - self.height - 650
             font_name: './resources/fonts/alagard.ttf'
-        InteractiveButton:
+            on_release: [Factory.MenuPopup().open(), print(self)]
+        BoostedMenuButton:
+            id: stats_button
             size_hint: 0.1, 0.1
             text: 'Stats'
             base_text: 'Stats'
@@ -160,7 +201,8 @@
             hover_text_color: translate_color('indian red')
             pos: root.width / 2 - self.width / 2, root.height - self.height - 850
             font_name: './resources/fonts/alagard.ttf'
-        InteractiveButton:
+        BoostedMenuButton:
+            id: credits_button
             size_hint: 0.1, 0.1
             text: 'Credits'
             base_text: 'Credits'
@@ -171,7 +213,8 @@
             hover_text_color: translate_color('indian red')
             pos: root.width / 2 - self.width / 2, root.height - self.height - 1050
             font_name: './resources/fonts/alagard.ttf'
-        InteractiveButton:
+        BoostedMenuButton:
+            id: settings_button
             size_hint: 0.1, 0.1
             text: 'Settings'
             base_text: 'Settings'
@@ -182,3 +225,38 @@
             hover_text_color: translate_color('indian red')
             pos: root.width / 2 - self.width / 2, root.height - self.height - 1250
             font_name: './resources/fonts/alagard.ttf'
+
+<MenuPopup@WarningPopup>:
+    auto_dismiss: False
+    id: menu_popup
+    size_hint: 0.5, 0.4
+    title: 'Log in required'
+    title_align: 'center'
+    title_font: './resources/fonts/alagard.ttf'
+    separator_color: translate_color('black*')
+    separator_height: 0
+    FloatLayout:
+        size: menu_popup.width, menu_popup.height
+        Label:
+            id: menu_popup_message
+            text:
+                """You must be logged in
+                to access the Lobby."""
+            text_align: 'center'
+            pos: menu_popup.width / 2, menu_popup.height
+            font_size: 100
+            font_name: './resources/fonts/alagard.ttf'
+        BoostedButton:
+            pos: menu_popup.width / 2, menu_popup.height - 300
+            font_size: 60
+            font_name: './resources/fonts/alagard.ttf'
+            text: 'Got it'
+            base_text: 'Got it'
+            press_sound: 'mixkit_metal_hit_woosh_1485'
+            base_text_color: translate_color('white*')
+            hover_text_color: translate_color('indian red')
+            on_release: root.dismiss()
+            background_color: 0, 0, 0, 0
+
+
+
