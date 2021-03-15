@@ -6,6 +6,8 @@ import os
 from kivy.core.audio import SoundLoader
 from kivy_boost.common import resources_registry
 
+loaded_sounds = {}
+
 
 def load_sound_by_name(name=None, resources_path=None):
     """
@@ -15,7 +17,10 @@ def load_sound_by_name(name=None, resources_path=None):
     :return: The sound
     """
     if name in resources_registry['audio'].keys():
-        sound = SoundLoader.load(os.path.join(resources_path, resources_registry['audio'][name].path()))
+        if resources_path:
+            sound = SoundLoader.load(os.path.join(resources_path, resources_registry['audio'][name].path()))
+        else:
+            sound = SoundLoader.load(resources_registry['audio'][name].fullpath())
 
         return sound
 

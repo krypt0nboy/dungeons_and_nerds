@@ -21,6 +21,8 @@ class FadingAnchorLayout(AnchorLayout):
     """
     """
 
+    fade_duration = NumericProperty(defaultvalue=0.5)
+
     def __init__(self, **kwargs):
         super(FadingAnchorLayout, self).__init__(**kwargs)
         self.animate()

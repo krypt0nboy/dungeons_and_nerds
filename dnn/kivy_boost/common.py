@@ -1,8 +1,12 @@
 """
 Provides with common properties and attributes for kivy boost.
 """
+import os
+
 from kivy.app import App
 from kivy.properties import ObjectProperty
+
+from kivy_boost.exceptions import *
 
 resources_registry = {}
 
@@ -49,6 +53,51 @@ def register_graphic_resource(resource=None):
     return register_resource(registry='graphics', resource=resource)
 
 
+def get_resource_full_path(registry=None, name=None):
+    """
+    Allows to get the full path of a registered resource.
+    :param registry: The registry to query.
+    :param name: The name of the resource.
+    :return: The resource's full path as a string.
+    :rtype: str
+    """
+    if registry in resources_registry.keys():
+        if name in resources_registry[registry].keys():
+            return resources_registry[registry][name].fullpath()
+    else:
+        raise ResourcesRegistryException("No such registry : %s" % registry)
+
+
+def get_font_resource_full_path(name=None):
+    """
+    Allows to get the full path of a font registered resource.
+    :param name: The name of the font resource.
+    :return: The resource's full path as a string.
+    :rtype: str
+    """
+    return get_resource_full_path(registry='fonts', name=name)
+
+
+def get_audio_resource_full_path(name=None):
+    """
+    Allows to get the full path of an audio registered resource.
+    :param name: The name of the audio resource.
+    :return: The resource's full path as a string.
+    :rtype: str
+    """
+    return get_resource_full_path(registry='audio', name=name)
+
+
+def get_graphic_resource_full_path(name=None):
+    """
+    Allows to get the full path of a graphic registered resource.
+    :param name: The name of the graphic resource.
+    :return: The resource's full path as a string.
+    :rtype: str
+    """
+    return get_resource_full_path(registry='graphics', name=name)
+
+
 class KivyBoostCommon(object):
     """
     Common class for KivyBoost.
@@ -70,8 +119,16 @@ class ResourceBase(object):
         raise NotImplementedError
 
     @classmethod
+    def base_path(cls):
+        raise NotImplementedError
+
+    @classmethod
     def path(cls):
         raise NotImplementedError
+
+    @classmethod
+    def fullpath(cls):
+        return os.path.join(cls.base_path(), cls.path())
 
     @classmethod
     def name(cls):
@@ -102,6 +159,10 @@ class AudioResourceBase(ResourceBase):
     @classmethod
     def registry(cls):
         return 'audio'
+
+    @classmethod
+    def base_path(cls):
+        raise NotImplementedError
 
     @classmethod
     def path(cls):
@@ -138,6 +199,10 @@ class FontResourceBase(ResourceBase):
         return 'fonts'
 
     @classmethod
+    def base_path(cls):
+        raise NotImplementedError
+
+    @classmethod
     def path(cls):
         raise NotImplementedError
 
@@ -170,6 +235,10 @@ class GraphicResourceBase(ResourceBase):
     @classmethod
     def registry(cls):
         return 'graphics'
+
+    @classmethod
+    def base_path(cls):
+        raise NotImplementedError
 
     @classmethod
     def path(cls):

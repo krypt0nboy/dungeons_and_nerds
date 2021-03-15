@@ -1,4 +1,5 @@
-"""This file provides with an audio registry.
+"""This file provides with audio related features.
 
 """
 
+loaded_sounds = {}

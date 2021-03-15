@@ -15,6 +15,8 @@ def load_font_by_name(name=None, resources_path=None):
     """
     if name in resources_registry['fonts'].keys():
         return os.path.join(resources_path, resources_registry['fonts'][name].path())
+    else:
+        return os.path.join(resources_registry['fonts'][name].fullpath())
 
 
 def load_graphic_by_name(name=None, resources_path=None):
@@ -25,4 +27,7 @@ def load_graphic_by_name(name=None, resources_path=None):
     :return: The path of the font
     """
     if name in resources_registry['fonts'].keys():
-        return os.path.join(resources_path, resources_registry['graphics'][name].path())
+        if resources_path:
+            return os.path.join(resources_path, resources_registry['graphics'][name].path())
+        else:
+            return os.path.join(resources_registry['graphics'][name].fullpath())
